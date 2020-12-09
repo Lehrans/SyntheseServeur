@@ -3,7 +3,7 @@ import express from 'express';
 import errors from './utils/errors.js';
 import database from './utils/database.js';
 
-import accountsRoutes from './routes/accountRoutes.js';
+import explorersRoutes from './routes/explorerRoutes.js';
 
 database();
 
@@ -11,7 +11,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/accounts',accountsRoutes);
+app.use('/explorers',explorersRoutes);
 
 app.use('*', errors);
 

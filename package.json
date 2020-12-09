@@ -9,7 +9,7 @@
     "start:dev": "nodemon server.js --inspect",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Yannick Charron",
+  "author": "Maxime et Simon",
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.1.0",

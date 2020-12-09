@@ -2,7 +2,7 @@ import express from 'express';
 import expressJWT from 'express-jwt';
 import httpErrors from 'http-errors';
 
-import accountServices from '../services/accountServices.js';
+import explorerServices from '../services/explorerServices.js';
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ const authenticateJWT = expressJWT({ secret: process.env.JWT_TOKEN_SECRET, algor
 //Refresh JWT middleware
 const authenticateRefreshJWT = expressJWT({ secret: process.env.JWT_REFRESH_SECRET, algorithms: ['HS256'] });
 
-class AccountsRoutes {
+class ExplorersRoutes {
     constructor() {
         router.post('/', this.post);
         router.post('/login', this.login);
@@ -23,15 +23,15 @@ class AccountsRoutes {
 
     async post(req, res, next) {
         try {
-            let account = await accountServices.create(req.body);
+            let explorer = await explorerServices.create(req.body);
             //Generate Access Token (JWT)
-            const { accessToken } = accountServices.generateJWT(account);
+            const { accessToken } = explorerServices.generateJWT(explorer);
 
-            account = account.toObject({ getters: false, virtuals: false });
-            account = accountServices.transform(account);
-            account.accessToken = accessToken;
+            explorer = explorer.toObject({ getters: false, virtuals: false });
+            explorer = explorerServices.transform(explorer);
+            explorer.accessToken = accessToken;
 
-            res.status(201).json(account);
+            res.status(201).json(explorer);
         } catch (err) {
             return next(httpErrors.InternalServerError(err));
         }
@@ -39,8 +39,8 @@ class AccountsRoutes {
 
     secure(req, res, next) {
         //Retrieve user from request
-        const email = req.user.email;
-        return res.status(200).json(email);
+        const username = req.user.username;
+        return res.status(200).json(username);
 
         //Authorization BEARER <token>
     }
@@ -48,11 +48,11 @@ class AccountsRoutes {
     async login(req, res, next) {
         const { username, password } = req.body;
 
-        const result = await accountServices.login(username, password);
+        const result = await explorerServices.login(username, password);
 
-        if (result.account) {
+        if (result.explorer) {
             //Generate Access Token (JWT) and response
-            const token = accountServices.generateJWT(result.account);
+            const token = explorerServices.generateJWT(result.explorer);
             res.status(201).json(token);
         } else {
             return next(result.err);
@@ -60,24 +60,24 @@ class AccountsRoutes {
     }
 
     async refreshToken(req, res, next) {
-        //TODO: Retrieve account
+        //TODO: Retrieve explorer
         //1. est-ce que le refresh est dans la BD et au bon user
         const refreshToken = req.headers.authorization.split(' ')[1];
-        const { email } = req.body;
-        const account = await accountServices.validateRefreshToken(email, refreshToken);
+        const { username } = req.body;
+        const explorer = await explorerServices.validateRefreshToken(username, refreshToken);
         //Authorization BEARER <token>
-        if (account) {
-            const { accessToken } = accountServices.generateJWT(account, false);
+        if (explorer) {
+            const { accessToken } = explorerServices.generateJWT(explorer, false);
             res.status(201).json({ accessToken });
         } else {
-            await accountServices.logoutRefresh(refreshToken);
+            await explorerServices.logoutRefresh(refreshToken);
             return next(httpErrors.Unauthorized('Cannot refresh token'));
         }
     }
 
     async logout(req, res, next) {
         try {
-            await accountServices.logout(req.user.email);
+            await explorerServices.logout(req.user.username);
             res.status(204).end();
         } catch (err) {
             return next(httpErrors.InternalServerError());
@@ -85,6 +85,6 @@ class AccountsRoutes {
     }
 }
 
-new AccountsRoutes();
+new ExplorersRoutes();
 
 export default router;

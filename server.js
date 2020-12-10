@@ -3,7 +3,7 @@ import chalk from 'chalk';
 
 import app from './src/app.js';
 
-const PORT = 5000;
+const PORT = 5600;
 
 app.listen(PORT, err => {
     // Mon serveur est maintenant en mode écoute

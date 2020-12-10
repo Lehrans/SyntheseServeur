@@ -9,7 +9,7 @@ class ExplorerServices {
         const explorer = await Explorers.findOne({ username: username });
 
         if (!explorer) {
-            return { err: httpErrors.Unauthorized(`Aucun compte existant avec le courriel ${username}`) };
+            return { err: httpErrors.Unauthorized(`Aucun compte existant avec le nom d'utilisateur ${username}`) };
         } else {
             if (this.validatePassword(password, explorer)) {
                 return { explorer: explorer };

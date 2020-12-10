@@ -19,6 +19,9 @@ class ExplorersRoutes {
         router.post('/refresh', authenticateRefreshJWT, this.refreshToken); //Pas une route secure, le token est expiré
         router.get('/secure', authenticateJWT, this.secure);
         router.delete('/logout', authenticateJWT, this.logout);
+
+        router.get('/monsters', authenticateJWT, this.getAllMonsters);
+
     }
 
     async post(req, res, next) {
@@ -82,6 +85,10 @@ class ExplorersRoutes {
         } catch (err) {
             return next(httpErrors.InternalServerError());
         }
+    }
+
+    async getAllMonsters(req, res, next) {
+        
     }
 }
 

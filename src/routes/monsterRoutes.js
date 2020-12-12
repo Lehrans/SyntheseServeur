@@ -14,7 +14,7 @@ const authenticateRefreshJWT = expressJWT({ secret: process.env.JWT_REFRESH_SECR
 
 class MonstersRoutes {
     constructor() {
-
+        
     }
 }
 

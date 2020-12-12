@@ -3,7 +3,7 @@ import expressJWT from 'express-jwt';
 import httpErrors from 'http-errors';
 
 import explorerServices from '../services/explorerServices.js';
-
+import monsterServices from '../services/monsterServices.js';
 const router = express.Router();
 
 //JWT middleware
@@ -88,7 +88,19 @@ class ExplorersRoutes {
     }
 
     async getAllMonsters(req, res, next) {
-        
+        try {
+            let explorerId = await explorerServices.retrieveId(req.user.username);
+            let monsters = await monsterServices.retrieveMonsters(explorerId);
+            monsters = monsters.map(m => {
+                return {talents : m["talents"], kernel : m["kernel"], atlasNumber : m["atlasNumber"],
+                        name : m["name"], health : m["health"], damage : m["damage"], speed : m["speed"],
+                        critical : m["critical"], affinity : m["affinity"], assets : m["assets"],
+                        hash : m["hash"], href : `${process.env.BASE_URL}/monsters/${m._id}` };
+              });
+            return res.status(200).json(monsters);
+        } catch (err) {
+            return next(httpErrors.InternalServerError());
+        }
     }
 }
 

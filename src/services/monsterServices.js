@@ -15,9 +15,14 @@ class MonsterServices {
     transform(monster) {
         delete monster._id;
         delete monster.__v;
-        
         return monster;
     }
+
+    async retrieveMonsters(explorer) {
+        let monsters = Monsters.find({explorer: explorer})
+        return monsters;
+    }
+
 }
 
 export default new MonsterServices();

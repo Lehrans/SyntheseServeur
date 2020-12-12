@@ -3,6 +3,8 @@ import expressJWT from 'express-jwt';
 import httpErrors from 'http-errors';
 
 import explorationServices from '../services/explorationServices.js';
+import explorerServices from '../services/explorerServices.js';
+import monsterServices from '../services/monsterServices.js';
 
 const router = express.Router();
 
@@ -14,23 +16,35 @@ const authenticateRefreshJWT = expressJWT({ secret: process.env.JWT_REFRESH_SECR
 
 class ExplorationsRoutes {
     constructor() {
-        router.post('/:monster', authenticateJWT, this.post);
+        router.post('/', authenticateJWT, this.post);
     }
 
     async post(req, res, next) {
         try {
-            let exploration;
-            if(req.params.monster === 'false' && req.body.vault === undefined)
+            let exploration = {};
+            if(req.query.monster === 'false' && req.query.vault === 'false')
             {
-                //Aucun monstre capturé     
+                //Aucun monstre capturé et vault und     
+                req.body.explorer = await explorerServices.retrieveId(req.user.username);
                 exploration = await explorationServices.create(req.body);
+                exploration = exploration.toObject({ getters: false, virtuals: false });
+                exploration = explorationServices.transform(exploration);
             }
-            else{
-                //L'utilisateur a choisi de capturé le monstre
+            else if (req.query.monster === 'true'  && req.query.vault === 'false'){
+
+                req.body.explorer = await explorerServices.retrieveId(req.user.username);
+                exploration = await explorationServices.create(req.body);
+                let monster = await monsterServices.create(req.body.monster, req.body.explorer, exploration._id);
+                
+                monster = monster.toObject({ getters: false, virtuals: false });
+                monster = monsterServices.transform(monster);
+                
+                exploration = exploration.toObject({ getters: false, virtuals: false });
+                exploration.monster = monster;
+                exploration = explorationServices.transform(exploration);
+
             }
 
-            exploration = exploration.toObject({ getters: false, virtuals: false });
-            exploration = explorationServices.transform(exploration);
             res.status(201).json(exploration);
 
         } catch (err) {

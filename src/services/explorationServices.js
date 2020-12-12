@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import httpErrors from 'http-errors';
 
 import Explorations from '../models/exploration.js';
+import monsterServices from '../services/monsterServices.js';
 
 class ExplorationServices {
 
@@ -14,7 +15,8 @@ class ExplorationServices {
 
         delete exploration._id;
         delete exploration.__v;
-
+        delete exploration.explorer;
+        
         return exploration;
     }
 

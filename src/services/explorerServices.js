@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import httpErrors from 'http-errors';
 
 import Explorers from '../models/explorer.js';
+import explorer from '../models/explorer.js';
 
 class ExplorerServices {
     async login(username, password) {
@@ -80,6 +81,11 @@ class ExplorerServices {
         delete explorer.__v;
 
         return explorer;
+    }
+
+    async retrieveId(username) {
+        let explorer = await Explorers.findOne({ username: username })
+        return explorer._id;
     }
 }
 

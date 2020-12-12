@@ -17,6 +17,13 @@ class ExplorationServices {
         delete exploration.__v;
         delete exploration.explorer;
         
+        if(exploration.vault != undefined) {
+            delete exploration.vault._id;
+            exploration.vault.elements.forEach(e => {
+                delete e._id;
+                
+            });
+        }
         return exploration;
     }
 

@@ -24,14 +24,35 @@ class ExplorationsRoutes {
             let exploration = {};
             if(req.query.monster === 'false' && req.query.vault === 'false')
             {
-                //Aucun monstre capturé et vault und     
+                //Aucun monstre et rien dans la vault    
                 req.body.explorer = await explorerServices.retrieveId(req.user.username);
                 exploration = await explorationServices.create(req.body);
                 exploration = exploration.toObject({ getters: false, virtuals: false });
                 exploration = explorationServices.transform(exploration);
-            }
+            } 
             else if (req.query.monster === 'true'  && req.query.vault === 'false'){
 
+                //Un monstre et rien dans la vault  
+                req.body.explorer = await explorerServices.retrieveId(req.user.username);
+                exploration = await explorationServices.create(req.body);
+                let monster = await monsterServices.create(req.body.monster, req.body.explorer, exploration._id);
+                
+                monster = monster.toObject({ getters: false, virtuals: false });
+                monster = monsterServices.transform(monster);
+                
+                exploration = exploration.toObject({ getters: false, virtuals: false });
+                exploration.monster = monster;
+                exploration = explorationServices.transform(exploration);
+
+            }
+            else if (req.query.monster === 'false'  && req.query.vault === 'true'){
+                req.body.explorer = await explorerServices.retrieveId(req.user.username);
+                exploration = await explorationServices.create(req.body);
+                exploration = exploration.toObject({ getters: false, virtuals: false });
+                exploration = explorationServices.transform(exploration);
+
+            }
+            else if(req.query.monster === 'true'  && req.query.vault === 'true'){
                 req.body.explorer = await explorerServices.retrieveId(req.user.username);
                 exploration = await explorationServices.create(req.body);
                 let monster = await monsterServices.create(req.body.monster, req.body.explorer, exploration._id);

@@ -22,7 +22,7 @@ class ExplorersRoutes {
         router.get('/monsters', authenticateJWT, this.getAllMonsters);          // Sélection de la liste de tous les monstres d'un explorateur
         router.delete('/logout', authenticateJWT, this.logout);                 // // Déconnexion d'un joueur
         // Routes restantes / à faire
-        router.get('/', authenticateJWT, this.getUser);                         // Sélection d'un compte
+        //router.get('/', authenticateJWT, this.getUser);                         // Sélection d'un compte
         router.get('/elements', authenticateJWT, this.getElements)              // Sélection des éléments d'un explorateur
         router.get('/inox', authenticateJWT, this.getInox)                      // Sélection du nombre d'inox d'un explorateur
         router.get('/location', authenticateJWT, this.getLocation)              // Sélection de la location d'un explorateur

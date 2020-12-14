@@ -9,7 +9,7 @@ import monsterServices from "../services/monsterServices.js";
 const router = express.Router();
 class ExplorationsRoutes {
   constructor() {
-    router.post("/", authenticateJWT, this.postExploration); //Ajout d'une exploration
+    router.post("/", this.postExploration); //Ajout d'une exploration
     // Routes restantes / à faire
     router.get("/exploration/:idExploration", this.getOneExploration); //Ajout d'une exploration
   }

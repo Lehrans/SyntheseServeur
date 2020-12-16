@@ -4,6 +4,8 @@ import httpErrors from 'http-errors';
 
 import explorerServices from '../services/explorerServices.js';
 import monsterServices from '../services/monsterServices.js';
+import explorationServices from '../services/explorationServices.js';
+
 const router = express.Router();
 
 //JWT middleware
@@ -19,8 +21,10 @@ class ExplorersRoutes {
         router.post('/', this.post);                                    // Création d'un compte
         router.post('/login', this.login);                                      // Connexion d'un joueur
         router.post('/refresh', authenticateRefreshJWT, this.refreshToken);// Pas une route secure, le token est expiré
-        router.get('/monsters', authenticateJWT, this.getAllMonsters);          // Sélection de la liste de tous les monstres d'un explorateur
+        router.get('/monsters', authenticateJWT, this.getAllMonsters); // Sélection de la liste de tous les monstres d'un explorateur
+        router.get('/monsters/:idMonster', this.getOneMonster) // Sélection d'un monstre
         router.get('/secure', authenticateJWT, this.secure);
+
         router.delete('/logout', authenticateJWT, this.logout);                 // // Déconnexion d'un joueur
         // Routes restantes / à faire
         //router.get('/', authenticateJWT, this.getUser);                         // Sélection d'un compte
@@ -144,15 +148,42 @@ class ExplorersRoutes {
     }
     //##################################################################################
     async getLocation(req, res, next) {
-        // Réponse hardcodé
-        location = {location:"Location hardcodée"};
-        return res.status(200).json(location);
+        try {
+            let location = await explorerServices.retrieveLocation(req.user.username);
+            res.status(200).json(location);
+       } catch(err) {
+           return next(httpErrors.InternalServerError(err));
+       }
     }
     //##################################################################################
     async getExplorations(req, res, next) {
-        // Réponse hardcodé
-        explorations = [];
-        return res.status(200).json(explorations);
+        try {
+            let explorerId = await explorerServices.retrieveId(req.user.username);
+            let explorations = await explorationServices.retrieveExplorations(explorerId);
+            
+            explorations = explorations.map(e => {
+                return {explorationDate : e["explorationDate"], destination : e["destination"], explorer : e["explorer"]};
+              });
+            
+
+            res.status(200).json(explorations);
+       } catch(err) {
+           return next(httpErrors.InternalServerError(err));
+       }
+    }
+    
+
+    //##################################################################################
+    async getOneMonster(req, res, next) {
+        try {
+            let monster = await monsterServices.retrieveById(req.params.idMonster);
+            console.log(monster);
+            monster = monster.toObject({ getter: false, virtuals: false });
+            monster = monsterServices.transform(monster);
+            res.status(200).json(monster);
+       } catch(err) {
+           return next(httpErrors.InternalServerError(err));
+       }
     }
 }
 

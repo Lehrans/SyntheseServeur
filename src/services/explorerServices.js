@@ -87,6 +87,11 @@ class ExplorerServices {
         let explorer = await Explorers.findOne({ username: username })
         return explorer._id;
     }
+
+    async retrieveLocation(username){
+        let explorer = await Explorers.findOne({ username: username });
+        return explorer.location;
+    }
 }
 
 export default new ExplorerServices();

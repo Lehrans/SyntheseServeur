@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import httpErrors from 'http-errors';
 
 import Explorations from '../models/exploration.js';
-import monsterServices from '../services/monsterServices.js';
 
 class ExplorationServices {
 
@@ -25,6 +24,16 @@ class ExplorationServices {
             });
         }
         return exploration;
+    }
+
+    async retrieveById(explorationId) {
+        return await Explorations.findById(explorationId);
+    }
+
+    async retrieveExplorations(explorerId) {
+        let explorations = Explorations.find({explorer: explorerId})
+        return explorations;
+
     }
 
 }

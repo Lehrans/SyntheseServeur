@@ -23,6 +23,10 @@ class MonsterServices {
         return monsters;
     }
 
+    async retrieveById(monsterId) {
+        return await Monsters.findById(monsterId);
+    }
+
 }
 
 export default new MonsterServices();

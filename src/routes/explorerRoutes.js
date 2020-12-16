@@ -26,7 +26,7 @@ class ExplorersRoutes {
         router.get('/elements', authenticateJWT, this.getElements)              // Sélection des éléments d'un explorateur
         router.get('/inox', authenticateJWT, this.getInox)                      // Sélection du nombre d'inox d'un explorateur
         router.get('/location', authenticateJWT, this.getLocation)              // Sélection de la location d'un explorateur
-        router.get('/explorations', authenticateJWT, this.getExlporations)      // Sélection de toutes les expéditions réalisées d'un explorateur
+        router.get('/explorations', authenticateJWT, this.getExplorations)      // Sélection de toutes les expéditions réalisées d'un explorateur
     }
 
     /* Exemple d'une route sécuritaire utilisant un Token
@@ -77,6 +77,7 @@ class ExplorersRoutes {
         const refreshToken = req.headers.authorization.split(' ')[1];
         const { username } = req.body;
         const explorer = await explorerServices.validateRefreshToken(username, refreshToken);
+        console.log(explorer);
         //Authorization BEARER <token>
         if (explorer) {
             const { accessToken } = explorerServices.generateJWT(explorer, false);
@@ -150,7 +151,7 @@ class ExplorersRoutes {
         return res.status(200).json(location);
     }
     //##################################################################################
-    async getExlporations(req, res, next) {
+    async getExplorations(req, res, next) {
         // Réponse hardcodé
         explorations = [];
         return res.status(200).json(explorations);

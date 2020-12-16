@@ -8,7 +8,7 @@ const explorerSchema = mongoose.Schema(
         salt: { type: String, required: true },
         refreshToken: { type: String },
         inox: { type: Number },
-        location: { type: Number },
+        location: { type: String },
         elements: [{
             element: { type: String },
             quantity: { type: Number }

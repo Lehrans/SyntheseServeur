@@ -16,10 +16,11 @@ class ExplorersRoutes {
 
     //##################################################################################
     constructor() {
-        router.post('/creation', this.post);                                    // Création d'un compte
+        router.post('/', this.post);                                    // Création d'un compte
         router.post('/login', this.login);                                      // Connexion d'un joueur
-        router.post('/refreshToken', authenticateRefreshJWT, this.refreshToken);// Pas une route secure, le token est expiré
+        router.post('/refresh', authenticateRefreshJWT, this.refreshToken);// Pas une route secure, le token est expiré
         router.get('/monsters', authenticateJWT, this.getAllMonsters);          // Sélection de la liste de tous les monstres d'un explorateur
+        router.get('/secure', authenticateJWT, this.secure);
         router.delete('/logout', authenticateJWT, this.logout);                 // // Déconnexion d'un joueur
         // Routes restantes / à faire
         //router.get('/', authenticateJWT, this.getUser);                         // Sélection d'un compte
@@ -29,7 +30,6 @@ class ExplorersRoutes {
         router.get('/explorations', authenticateJWT, this.getExplorations)      // Sélection de toutes les expéditions réalisées d'un explorateur
     }
 
-    /* Exemple d'une route sécuritaire utilisant un Token
     secure(req, res, next) {
         //Retrieve user from request
         const username = req.user.username;
@@ -37,7 +37,6 @@ class ExplorersRoutes {
 
         //Authorization BEARER <token>
     } 
-    */
     //##################################################################################
     async post(req, res, next) {
         try {
@@ -77,7 +76,6 @@ class ExplorersRoutes {
         const refreshToken = req.headers.authorization.split(' ')[1];
         const { username } = req.body;
         const explorer = await explorerServices.validateRefreshToken(username, refreshToken);
-        console.log(explorer);
         //Authorization BEARER <token>
         if (explorer) {
             const { accessToken } = explorerServices.generateJWT(explorer, false);

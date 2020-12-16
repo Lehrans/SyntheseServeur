@@ -7,9 +7,17 @@ import explorerServices from "../services/explorerServices.js";
 import monsterServices from "../services/monsterServices.js";
 
 const router = express.Router();
+
+//JWT middleware
+const authenticateJWT = expressJWT({ secret: process.env.JWT_TOKEN_SECRET, algorithms: ['HS256'] });
+
+//Refresh JWT middleware
+const authenticateRefreshJWT = expressJWT({ secret: process.env.JWT_REFRESH_SECRET, algorithms: ['HS256'] });
+
+
 class ExplorationsRoutes {
   constructor() {
-    router.post("/", this.postExploration); //Ajout d'une exploration
+    router.post("/", authenticateJWT, this.postExploration); //Ajout d'une exploration
     // Routes restantes / à faire
     router.get("/exploration/:idExploration", this.getOneExploration); //Ajout d'une exploration
   }
@@ -17,12 +25,11 @@ class ExplorationsRoutes {
   //##################################################################################
   async postExploration(req, res, next) {
     try {
+      console.log(req.user.username)          ;
       let exploration = {};
       if (req.query.monster === "false" && req.query.vault === "false") {
         //Aucun monstre et rien dans la vault
-        req.body.explorer = await explorerServices.retrieveId(
-          req.user.username
-        );
+        req.body.explorer = await explorerServices.retrieveId(req.user.username);
         exploration = await explorationServices.create(req.body);
         exploration = exploration.toObject({ getters: false, virtuals: false });
         exploration = explorationServices.transform(exploration);

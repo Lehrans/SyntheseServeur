@@ -29,11 +29,11 @@ class ExplorersRoutes {
     router.get("/monsters", authenticateJWT, this.getAllMonsters); // Sélection de la liste de tous les monstres d'un explorateur
     router.get("/monsters/:idMonster", this.getOneMonster); // Sélection d'un monstre
     router.get("/secure", authenticateJWT, this.secure);
-    router.delete("/logout", authenticateJWT, this.logout); // Déconnexion d'un joueur
     router.get("/elements", authenticateJWT, this.getElements); // Sélection des éléments d'un explorateur
     router.get("/inox", authenticateJWT, this.getInox); // Sélection du nombre d'inox d'un explorateur
     router.get("/location", authenticateJWT, this.getLocation); // Sélection de la location d'un explorateur
     router.get("/explorations", authenticateJWT, this.getExplorations); // Sélection de toutes les expéditions réalisées d'un explorateur
+    router.delete("/logout", authenticateJWT, this.logout); // Déconnexion d'un joueur
   }
 
   secure(req, res, next) {

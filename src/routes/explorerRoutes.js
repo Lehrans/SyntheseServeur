@@ -29,10 +29,7 @@ class ExplorersRoutes {
     router.get("/monsters", authenticateJWT, this.getAllMonsters); // Sélection de la liste de tous les monstres d'un explorateur
     router.get("/monsters/:idMonster", this.getOneMonster); // Sélection d'un monstre
     router.get("/secure", authenticateJWT, this.secure);
-
     router.delete("/logout", authenticateJWT, this.logout); // Déconnexion d'un joueur
-    // Routes restantes / à faire
-    //router.get('/', authenticateJWT, this.getUser);                         // Sélection d'un compte
     router.get("/elements", authenticateJWT, this.getElements); // Sélection des éléments d'un explorateur
     router.get("/inox", authenticateJWT, this.getInox); // Sélection du nombre d'inox d'un explorateur
     router.get("/location", authenticateJWT, this.getLocation); // Sélection de la location d'un explorateur
@@ -62,7 +59,6 @@ class ExplorersRoutes {
       return next(httpErrors.InternalServerError(err));
     }
   }
-
   //##################################################################################
   async login(req, res, next) {
     const { username, password } = req.body;
@@ -77,7 +73,6 @@ class ExplorersRoutes {
       return next(result.err);
     }
   }
-
   //##################################################################################
   async refreshToken(req, res, next) {
     //TODO: Retrieve explorer
@@ -97,7 +92,6 @@ class ExplorersRoutes {
       return next(httpErrors.Unauthorized("Cannot refresh token"));
     }
   }
-
   //##################################################################################
   async logout(req, res, next) {
     try {
@@ -107,7 +101,6 @@ class ExplorersRoutes {
       return next(httpErrors.InternalServerError());
     }
   }
-
   //##################################################################################
   async getAllMonsters(req, res, next) {
     try {
@@ -143,7 +136,8 @@ class ExplorersRoutes {
     } catch (err) {
       return next(httpErrors.InternalServerError(err));
     }
-S  }
+    S;
+  }
   //##################################################################################
   async getInox(req, res, next) {
     try {
@@ -183,7 +177,6 @@ S  }
       return next(httpErrors.InternalServerError(err));
     }
   }
-
   //##################################################################################
   async getOneMonster(req, res, next) {
     try {

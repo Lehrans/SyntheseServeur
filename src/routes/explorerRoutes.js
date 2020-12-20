@@ -39,6 +39,7 @@ class ExplorersRoutes {
   async secure(req, res, next) {
     try {
       let explorer = await explorerServices.retrieveExplorer(req.user.username);
+      explorer = explorerServices.transform(explorer);
       res.status(200).json(explorer);
     } catch (err) {
       return next(httpErrors.InternalServerError(err));

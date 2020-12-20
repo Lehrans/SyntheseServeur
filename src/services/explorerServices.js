@@ -102,6 +102,11 @@ class ExplorerServices {
         let explorer = await Explorers.findOne({ username: username });
         return explorer.inox;
     }
+    
+    async retrieveExplorer(username){
+        let explorer = await Explorers.findOne({ username: username });
+        return explorer;
+    }
 }
 
 export default new ExplorerServices();

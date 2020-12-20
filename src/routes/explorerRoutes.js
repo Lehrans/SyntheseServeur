@@ -26,9 +26,9 @@ class ExplorersRoutes {
     router.post("/", this.post); // Création d'un compte
     router.post("/login", this.login); // Connexion d'un joueur
     router.post("/refresh", authenticateRefreshJWT, this.refreshToken); // Pas une route secure, le token est expiré
+    router.get("/", authenticateJWT, this.secure); // Récupérer une explorer complet.
     router.get("/monsters", authenticateJWT, this.getAllMonsters); // Sélection de la liste de tous les monstres d'un explorateur
     router.get("/monsters/:idMonster", this.getOneMonster); // Sélection d'un monstre
-    router.get("/secure", authenticateJWT, this.secure);
     router.get("/elements", authenticateJWT, this.getElements); // Sélection des éléments d'un explorateur
     router.get("/inox", authenticateJWT, this.getInox); // Sélection du nombre d'inox d'un explorateur
     router.get("/location", authenticateJWT, this.getLocation); // Sélection de la location d'un explorateur
@@ -37,11 +37,12 @@ class ExplorersRoutes {
   }
 
   secure(req, res, next) {
-    //Retrieve user from request
-    const username = req.user.username;
-    return res.status(200).json(username);
-
-    //Authorization BEARER <token>
+    try {
+      let explorer = await explorerServices.retrieveExplorer(req.user.username);
+      res.status(200).json(explorer);
+    } catch (err) {
+      return next(httpErrors.InternalServerError(err));
+    }
   }
   //##################################################################################
   async post(req, res, next) {

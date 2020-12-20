@@ -36,7 +36,7 @@ class ExplorersRoutes {
     router.delete("/logout", authenticateJWT, this.logout); // Déconnexion d'un joueur
   }
 
-  secure(req, res, next) {
+  async secure(req, res, next) {
     try {
       let explorer = await explorerServices.retrieveExplorer(req.user.username);
       res.status(200).json(explorer);

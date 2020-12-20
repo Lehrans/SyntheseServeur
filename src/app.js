@@ -16,7 +16,7 @@ database();
 const app = express();
 
 // Ajout de 5 inox à toutes les 5 minutes.
-cron.schedule("* */5 * * * *", async () => {
+cron.schedule("*/5 * * * *", async () => {
   let explorer;
   explorer = await Explorers.find();
   const ajoutInox = 5;
@@ -27,8 +27,9 @@ cron.schedule("* */5 * * * *", async () => {
 });
 
 // Ajout de trois éléments au hasard à toutes les heures.
-cron.schedule("* * */1 * * *", async () => {
+cron.schedule("* */1 * * *", async () => {
   let explorer;
+  console.log("?");
   explorer = await Explorers.find();
   explorer.forEach(async (e) => {
     e.elements.forEach((element) => {
@@ -36,7 +37,6 @@ cron.schedule("* * */1 * * *", async () => {
     });
     await Explorers.findOneAndUpdate({ _id: e._id }, e);
   });
-  console.log("ADDED ELLEMENT");
 });
 
 app.use(express.json());

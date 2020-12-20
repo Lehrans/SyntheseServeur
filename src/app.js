@@ -27,14 +27,17 @@ cron.schedule("* */5 * * * *", async () => {
 });
 
 // Ajout de trois éléments au hasard à toutes les heures.
-cron.schedule("*/10 * * * * *", async () => {
-    // let explorer;
-    // explorer = await Explorers.find();
-    // explorer.forEach(async (e) => {
-    //     e.elements
-    //   await Explorers.findOneAndUpdate({ _id: e._id }, e);
-    // });
+cron.schedule("* * */1 * * *", async () => {
+  let explorer;
+  explorer = await Explorers.find();
+  explorer.forEach(async (e) => {
+    e.elements.forEach((element) => {
+        element.quantity += (Math.floor(Math.random() * 3) + 1);
+    });
+    await Explorers.findOneAndUpdate({ _id: e._id }, e);
   });
+  console.log("ADDED ELLEMENT");
+});
 
 app.use(express.json());
 

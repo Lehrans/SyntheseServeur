@@ -9,19 +9,32 @@ import explorationsRoutes from "./routes/explorationRoutes.js";
 // Pour les ajouts récursifs
 import cron from "node-cron";
 import Explorers from "./models/explorer.js";
-import cors from "cors"
+import cors from "cors";
 
 database();
 
 const app = express();
 
-cron.schedule("*/5 * * * * *", () => {
+// Ajout de 5 inox à toutes les 5 minutes.
+cron.schedule("* */5 * * * *", async () => {
+  let explorer;
+  explorer = await Explorers.find();
   const ajoutInox = 5;
-  Explorers.findOneAndUpdate({}, { $inc: { inox: 5 } });
-  console.log("wow");
-  //explorers = Explorers.find();
-  //explorer
+  explorer.forEach(async (e) => {
+    e.inox += ajoutInox;
+    await Explorers.findOneAndUpdate({ _id: e._id }, e);
+  });
 });
+
+// Ajout de trois éléments au hasard à toutes les heures.
+cron.schedule("*/10 * * * * *", async () => {
+    // let explorer;
+    // explorer = await Explorers.find();
+    // explorer.forEach(async (e) => {
+    //     e.elements
+    //   await Explorers.findOneAndUpdate({ _id: e._id }, e);
+    // });
+  });
 
 app.use(express.json());
 

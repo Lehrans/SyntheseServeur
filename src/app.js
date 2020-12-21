@@ -14,7 +14,7 @@ app.use(express.json());
 
 app.use('/explorers',explorersRoutes);
 app.use('/explorations',explorationsRoutes);
-
+ 
 app.use('*', errors);
 
 export default app;

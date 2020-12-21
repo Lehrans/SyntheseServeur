@@ -72,7 +72,8 @@ class ExplorationsRoutes {
 
         //Ajout de la nouvelle location à l'explorer.
         explorer.location = exploration.destination;
-        await Explorers.findOneAndUpdate({ _id: explorer._id }, explorer);
+
+        await explorerServices.updateExplorer(explorer._id, exploration)
       } else if (req.query.monster === "true" && req.query.vault === "true") {
         //Un monstre et un vault
         req.body.explorer = await explorerServices.retrieveId(
@@ -94,7 +95,7 @@ class ExplorationsRoutes {
 
         //Ajout de la nouvelle location à l'explorer.
         explorer.location = exploration.destination;
-        await Explorers.findOneAndUpdate({ _id: explorer._id }, explorer);
+        await explorerServices.updateExplorer(explorer._id, exploration)
       }
 
       res.status(201).json(exploration);

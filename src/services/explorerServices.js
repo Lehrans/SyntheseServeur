@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import httpErrors from 'http-errors';
 
 import Explorers from '../models/explorer.js';
-import explorer from '../models/explorer.js';
 
 class ExplorerServices {
     async login(username, password) {
@@ -105,6 +104,21 @@ class ExplorerServices {
     
     async retrieveExplorer(username){
         let explorer = await Explorers.findOne({ username: username });
+        return explorer;
+    }
+
+    async updateExplorer(id, exploration){
+        let explorerFound = await Explorers.findById(id);
+        exploration.vault.elements.forEach(e => { 
+            explorerFound.elements.forEach(el => {
+                if(e.element == el.element) {
+                    el.quantity += e.quantity;
+                }
+                
+            });
+        });
+        console.log(explorerFound);
+        let explorer = await Explorers.findOneAndUpdate({ _id: id }, explorerFound);
         return explorer;
     }
 }

@@ -114,10 +114,16 @@ class ExplorerServices {
                 if(e.element == el.element) {
                     el.quantity += e.quantity;
                 }
-                
+                else {
+                    var index = explorerFound.elements.findIndex(x => x.element == e.element); 
+                    if (index === -1) {
+                        explorerFound.elements.push(e) 
+                    }
+                }
             });
+
         });
-        console.log(explorerFound);
+        explorerFound.inox += exploration.vault.inox;
         let explorer = await Explorers.findOneAndUpdate({ _id: id }, explorerFound);
         return explorer;
     }

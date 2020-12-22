@@ -6,6 +6,7 @@ import explorationServices from "../services/explorationServices.js";
 import explorerServices from "../services/explorerServices.js";
 import monsterServices from "../services/monsterServices.js";
 import Explorers from "../models/explorer.js";
+import Monsters from "../models/monster.js";
 
 const router = express.Router();
 
@@ -45,6 +46,10 @@ class ExplorationsRoutes {
           req.user.username
         );
         exploration = await explorationServices.create(req.body);
+        
+        if (req.body.monster.hash != undefined && (await Monsters.findOne({ hash: req.body.monster.hash })) != null) {
+          throw(418);
+        }
         let monster = await monsterServices.create(
           req.body.monster,
           req.body.explorer,
@@ -73,13 +78,17 @@ class ExplorationsRoutes {
         //Ajout de la nouvelle location à l'explorer.
         explorer.location = exploration.destination;
 
-        await explorerServices.updateExplorer(explorer._id, exploration)
+        await explorerServices.updateExplorer(explorer._id, exploration);
       } else if (req.query.monster === "true" && req.query.vault === "true") {
         //Un monstre et un vault
+
         req.body.explorer = await explorerServices.retrieveId(
           req.user.username
         );
         exploration = await explorationServices.create(req.body);
+        if (req.body.monster.hash != undefined && (await Monsters.findOne({ hash: req.body.monster.hash })) != null) {
+          throw(418);
+        }
         let monster = await monsterServices.create(
           req.body.monster,
           req.body.explorer,
@@ -95,11 +104,14 @@ class ExplorationsRoutes {
 
         //Ajout de la nouvelle location à l'explorer.
         explorer.location = exploration.destination;
-        await explorerServices.updateExplorer(explorer._id, exploration)
+        await explorerServices.updateExplorer(explorer._id, exploration);
       }
 
       res.status(201).json(exploration);
     } catch (err) {
+      if(err == 418){
+        return next(httpErrors.ImATeapot(err));
+      }
       return next(httpErrors.InternalServerError(err));
     }
   }

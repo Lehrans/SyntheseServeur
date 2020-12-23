@@ -27,7 +27,7 @@ cron.schedule("*/5 * * * *", async () => {
 });
 
 // Ajout de trois éléments au hasard à toutes les heures.
-cron.schedule("* */1 * * *", async () => {
+cron.schedule("0 */1 * * *", async () => {
   let explorer;
   explorer = await Explorers.find();
   explorer.forEach(async (e) => {

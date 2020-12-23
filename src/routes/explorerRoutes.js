@@ -80,7 +80,7 @@ class ExplorersRoutes {
     //TODO: Retrieve explorer
     //1. est-ce que le refresh est dans la BD et au bon user
     const refreshToken = req.headers.authorization.split(" ")[1];
-    const { username } = req.body;
+    const username = req.body;
     const explorer = await explorerServices.validateRefreshToken(
       username,
       refreshToken

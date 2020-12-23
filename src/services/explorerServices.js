@@ -156,6 +156,15 @@ class ExplorerServices {
     let explorer = await Explorers.findOneAndUpdate({ _id: id }, explorerFound);
     return explorer;
   }
+
+  substractElements(explorer, monster){
+    monster.kernel.forEach((k) => {
+      explorer.elements.forEach((e)=>{
+        if(k === e.element) e.quantity--;
+      });
+    });
+  }
+
 }
 
 export default new ExplorerServices();

@@ -87,8 +87,8 @@ class ExplorersRoutes {
     );
     //Authorization BEARER <token>
     if (explorer) {
-      const { accessToken } = explorerServices.generateJWT(explorer, false);
-      res.status(201).json({ accessToken });
+      const accessToken = explorerServices.generateJWT(explorer, false);
+      res.status(201).json(accessToken);
     } else {
       await explorerServices.logoutRefresh(refreshToken);
       return next(httpErrors.Unauthorized("Cannot refresh token"));

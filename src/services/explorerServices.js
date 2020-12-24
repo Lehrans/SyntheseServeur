@@ -163,6 +163,7 @@ class ExplorerServices {
         if(k === e.element) e.quantity--;
       });
     });
+    return explorer;
   }
 
 }

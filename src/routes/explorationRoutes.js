@@ -64,8 +64,8 @@ class ExplorationsRoutes {
         exploration = explorationServices.transform(exploration);
 
         //Ajout de la nouvelle location à l'explorer.
+        explorer = explorerServices.substractElements(explorer, monster);
         explorer.location = exploration.destination;
-        explorerServices.substractElements(explorer, monster);
         await Explorers.findOneAndUpdate({ _id: explorer._id }, explorer);
       } else if (req.query.monster === "false" && req.query.vault === "true") {
         //Aucun monstre et un vault
@@ -78,8 +78,7 @@ class ExplorationsRoutes {
 
         //Ajout de la nouvelle location à l'explorer.
         explorer.location = exploration.destination;
-
-        await explorerServices.updateExplorer(explorer._id, exploration);
+        await Explorers.findOneAndUpdate({ _id: explorer._id }, explorer);
       } else if (req.query.monster === "true" && req.query.vault === "true") {
         //Un monstre et un vault
 
@@ -104,9 +103,9 @@ class ExplorationsRoutes {
         exploration = explorationServices.transform(exploration);
 
         //Ajout de la nouvelle location à l'explorer.
+        explorer = explorerServices.substractElements(explorer, monster);
         explorer.location = exploration.destination;
-        explorerServices.substractElements(explorer, monster);
-        await explorerServices.updateExplorer(explorer._id, exploration);
+        await Explorers.findOneAndUpdate({ _id: explorer._id }, explorer);
       }
 
       res.status(201).json(exploration);

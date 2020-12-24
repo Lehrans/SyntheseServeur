@@ -65,7 +65,7 @@ class ExplorationsRoutes {
 
         //Ajout de la nouvelle location à l'explorer.
         explorer.location = exploration.destination;
-        Explorers.substractElements(explorer, monster);
+        explorerServices.substractElements(explorer, monster);
         await Explorers.findOneAndUpdate({ _id: explorer._id }, explorer);
       } else if (req.query.monster === "false" && req.query.vault === "true") {
         //Aucun monstre et un vault
@@ -105,7 +105,7 @@ class ExplorationsRoutes {
 
         //Ajout de la nouvelle location à l'explorer.
         explorer.location = exploration.destination;
-        Explorers.substractElements(explorer, monster);
+        explorerServices.substractElements(explorer, monster);
         await explorerServices.updateExplorer(explorer._id, exploration);
       }
 

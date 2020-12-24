@@ -46,9 +46,12 @@ class ExplorationsRoutes {
           req.user.username
         );
         exploration = await explorationServices.create(req.body);
-        
-        if (req.body.monster.hash != undefined && (await Monsters.findOne({ hash: req.body.monster.hash })) != null) {
-          throw(418);
+
+        if (
+          req.body.monster.hash != undefined &&
+          (await Monsters.findOne({ hash: req.body.monster.hash })) != null
+        ) {
+          throw 418;
         }
         let monster = await monsterServices.create(
           req.body.monster,
@@ -66,6 +69,7 @@ class ExplorationsRoutes {
         //Ajout de la nouvelle location à l'explorer.
         explorer = explorerServices.substractElements(explorer, monster);
         explorer.location = exploration.destination;
+
         await Explorers.findOneAndUpdate({ _id: explorer._id }, explorer);
       } else if (req.query.monster === "false" && req.query.vault === "true") {
         //Aucun monstre et un vault
@@ -78,6 +82,7 @@ class ExplorationsRoutes {
 
         //Ajout de la nouvelle location à l'explorer.
         explorer.location = exploration.destination;
+        explorer.inox += exploration.vault.inox;
         await Explorers.findOneAndUpdate({ _id: explorer._id }, explorer);
       } else if (req.query.monster === "true" && req.query.vault === "true") {
         //Un monstre et un vault
@@ -86,8 +91,11 @@ class ExplorationsRoutes {
           req.user.username
         );
         exploration = await explorationServices.create(req.body);
-        if (req.body.monster.hash != undefined && (await Monsters.findOne({ hash: req.body.monster.hash })) != null) {
-          throw(418);
+        if (
+          req.body.monster.hash != undefined &&
+          (await Monsters.findOne({ hash: req.body.monster.hash })) != null
+        ) {
+          throw 418;
         }
         let monster = await monsterServices.create(
           req.body.monster,
@@ -105,12 +113,13 @@ class ExplorationsRoutes {
         //Ajout de la nouvelle location à l'explorer.
         explorer = explorerServices.substractElements(explorer, monster);
         explorer.location = exploration.destination;
+        explorer.inox += exploration.vault.inox;
         await Explorers.findOneAndUpdate({ _id: explorer._id }, explorer);
       }
 
       res.status(201).json(exploration);
     } catch (err) {
-      if(err == 418){
+      if (err == 418) {
         return next(httpErrors.ImATeapot(err));
       }
       return next(httpErrors.InternalServerError(err));
